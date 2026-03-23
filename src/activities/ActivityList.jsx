@@ -5,13 +5,23 @@ export default function ActivityList({ activities, syncActivities }) {
 
   const { token } = useAuth();
 
-  return (
+  if (!token) {
+    return (
+        <ul>
+      {activities.map((activity) => (
+        <li key={activity.id}>{activity.name}</li>
+      ))}
+    </ul>
+    )
+  } else {
+    return (
     <ul>
       {activities.map((activity) => (
         <li key={activity.id}>{activity.name}
-            <button onClick={ async () =>{await deleteActivity(token, activity); syncActivities()}}>X</button>
+            <button id="delete" className="delete-button" onClick={ async () =>{await deleteActivity(token, activity); syncActivities()}}>X</button>
         </li>
       ))}
     </ul>
   );
+  }
 }
