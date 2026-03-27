@@ -87,3 +87,39 @@ export async function deleteARoutine(token, id) {
     throw Error(result.message);
   }
 }
+
+export async function createSet(token, sets) {
+  if (!token) {
+    throw Error("You must be signed in to create a routine.");
+  }
+
+  const response = await fetch(API + "/sets", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+    body: JSON.stringify(sets),
+  });
+
+  if (!response.ok) {
+    const result = await response.json();
+    throw Error(result.message);
+  }
+}
+
+export async function deleteASet(token, id) {
+  if (!token) {
+    throw Error("You must be signed in to delete a routine.");
+  }
+
+  const response = await fetch(API + "/sets/" + id, {
+    method: "DELETE",
+    headers: { Authorization: "Bearer " + token },
+  });
+
+  if (!response.ok) {
+    const result = await response.json();
+    throw Error(result.message);
+  }
+}

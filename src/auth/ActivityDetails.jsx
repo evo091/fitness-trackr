@@ -11,7 +11,6 @@ export default function ActivityDetails() {
     const {id} = useParams();
     const nav = useNavigate();
     const {token} = useAuth();
-    // console.log(token)
     
     useEffect(() => {
         const fetchActivity = async () => {
