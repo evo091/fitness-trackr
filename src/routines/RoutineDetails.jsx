@@ -7,6 +7,7 @@ import { useAuth } from "../auth/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import Sets from "./Sets";
 import { deleteASet } from "../api/routines";
+// import { getRoutines } from "../api/routines";
 
 export default function RoutineDetails() {
     const [routines, setRoutines] = useState();
@@ -14,12 +15,23 @@ export default function RoutineDetails() {
     const nav = useNavigate();
     const {token} = useAuth();
     
+    // const syncActivities = async () => {
+    // const data = await getRoutines();
+    // syncActivities(data);
+    // };
+
+
     useEffect(() => {
-        const fetchActivity = async () => {
+        const fetchRoutine = async () => {
             setRoutines(await getARoutine(id));
         }
-        fetchActivity();
+        fetchRoutine();
     },[id]);
+
+    const syncRoutine = async () => {
+        const updatedRoutine = await getARoutine(id);
+        setRoutines(updatedRoutine);
+    };
 
     const handleClick = async () => {
         try {
@@ -31,9 +43,10 @@ export default function RoutineDetails() {
             
     }
 
-    const handleClickSets = async () => {
+    const handleClickSets = async (setId) => {
         try {
-            await deleteASet(token, id)
+            await deleteASet(token, setId)
+            await syncRoutine();
         } catch(error) {
             toast.error(error.message)
         }
@@ -52,14 +65,14 @@ export default function RoutineDetails() {
               <ul>
                 {routines.sets && routines.sets.map((set, index) => (
                   <li key={set.id || index}>
-                    {set.name} - {set.duration} seconds, {set.count} reps
-                    <button onClick={handleClickSets}>Delete Set</button>
+                    {set.name} - {set.count} reps
+                    <button onClick={() => handleClickSets(set.id)}>Delete Set</button>
                   </li>
                 ))}
               </ul>)}
             </div>
             <h2>{routines.creatorName}</h2>
-            <Sets />
+            <Sets routineId={id} setCreated={syncRoutine} />
             <button onClick={handleClick}>Delete Routine</button>
             <ToastContainer/>
             </>}

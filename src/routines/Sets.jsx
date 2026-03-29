@@ -5,14 +5,9 @@ import { getActivities } from "../api/activities";
 import { ToastContainer, toast } from "react-toastify";
 
 
-export default function Sets() {
+export default function Sets({ routineId, setCreated }) {
   const { token } = useAuth();
   const [activities, setActivities] = useState([]);
-
-  const syncActivities = async () => {
-    const data = await getActivities();
-    setActivities(data);
-  };
 
   useEffect(() => {
     getActivities().then(setActivities);
@@ -20,12 +15,14 @@ export default function Sets() {
 
   const tryCreateSet = async (formData) => {
 
-    const reps = formData.get("count");
-    const setId = formData.get("id");
+    const activityId = formData.get("activities");
+    const count = formData.get("reps");
 
     try {
-      await createSet(token, { reps, setId });
-      syncActivities();
+      await createSet(token, { routineId, activityId, count });
+      if (setCreated) {
+        await setCreated();
+      }
     } catch (e) {
         toast.error(e.message);
     }
@@ -43,6 +40,10 @@ export default function Sets() {
         <label>
             Reps
             <input type="number" name="reps"/>
+        </label>
+        <label>
+          Duration
+            <input type="number" name="duration"/>
         </label>
         <button>Add Set</button>
       </form>
