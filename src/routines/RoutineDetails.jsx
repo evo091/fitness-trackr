@@ -7,19 +7,13 @@ import { useAuth } from "../auth/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import Sets from "./Sets";
 import { deleteASet } from "../api/routines";
-// import { getRoutines } from "../api/routines";
+
 
 export default function RoutineDetails() {
     const [routines, setRoutines] = useState();
     const {id} = useParams();
     const nav = useNavigate();
     const {token} = useAuth();
-    
-    // const syncActivities = async () => {
-    // const data = await getRoutines();
-    // syncActivities(data);
-    // };
-
 
     useEffect(() => {
         const fetchRoutine = async () => {

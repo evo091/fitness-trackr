@@ -8,14 +8,12 @@ export default function RoutinesForm({ syncActivities }) {
 
   const { token } = useAuth();
   const [activities, setActivities] = useState([]);
-  //const [error, setError] = useState(null);
 
   useEffect(() => {
     getActivities().then(setActivities);
   }, []);
 
   const tryCreateRoutine = async (formData) => {
-    //setError(null);
 
     const name = formData.get("name");
     const description = formData.get("description");
